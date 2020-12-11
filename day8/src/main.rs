@@ -2,15 +2,15 @@
 enum Instruction {
     Nop(isize),
     Jump(isize),
-    Acc(isize)
+    Acc(isize),
 }
 
-use std::fs::read_to_string;
 use std::collections::HashSet;
+use std::fs::read_to_string;
 
 fn run(instr: &[Instruction]) -> bool {
     let mut acc = 0;
-    let mut index= 0;
+    let mut index = 0;
     let mut seen = HashSet::new();
     loop {
         // We are done
@@ -27,33 +27,44 @@ fn run(instr: &[Instruction]) -> bool {
         }
         seen.insert(index);
         match curr_instr {
-            Instruction::Nop(_) => { index += 1; }
-            Instruction::Jump(i) => if i >= 0 {
-                index += i as usize
-            } else {
-                index -= -i as usize
+            Instruction::Nop(_) => {
+                index += 1;
             }
-            Instruction::Acc(i) => { acc += i; index += 1;}
+            Instruction::Jump(i) => {
+                if i >= 0 {
+                    index += i as usize
+                } else {
+                    index -= -i as usize
+                }
+            }
+            Instruction::Acc(i) => {
+                acc += i;
+                index += 1;
+            }
         }
     }
 }
 
 fn main() {
     let input = read_to_string("data/input").unwrap();
-    let mut instr : Vec<_> = input.lines().filter(|l| !l.trim().is_empty()).map(|l| {
-         let l = l.trim();
-         
-         let mut parts = l.split_whitespace();
-         let instr = parts.next().unwrap();
-         let op = parts.next().and_then(|i| i.parse::<isize>().ok());
+    let mut instr: Vec<_> = input
+        .lines()
+        .filter(|l| !l.trim().is_empty())
+        .map(|l| {
+            let l = l.trim();
 
-         match instr {
-            "jmp" => Instruction::Jump(op.unwrap()),
-            "acc" => Instruction::Acc(op.unwrap()),
-            "nop" => Instruction::Nop(op.unwrap()),
-            _ => panic!("Eh?")
-         }
-    }).collect();
+            let mut parts = l.split_whitespace();
+            let instr = parts.next().unwrap();
+            let op = parts.next().and_then(|i| i.parse::<isize>().ok());
+
+            match instr {
+                "jmp" => Instruction::Jump(op.unwrap()),
+                "acc" => Instruction::Acc(op.unwrap()),
+                "nop" => Instruction::Nop(op.unwrap()),
+                _ => panic!("Eh?"),
+            }
+        })
+        .collect();
 
     // Part 1
     run(&instr[..]);

@@ -128,9 +128,13 @@ fn main() {
             break;
         }
     }
-    dbg!(initial_guess
-        .iter()
-        .enumerate()
-        .map(|(i, c)| (i, c.len()))
-        .collect::<Vec<_>>());
+
+    let mut counter = 1;
+    for (i, c) in initial_guess.iter().enumerate() {
+        if c.iter().next().unwrap().name.contains("departure") {
+            counter *= my_ticket.values[i] as u64;
+        }
+    }
+
+    dbg!(counter);
 }
